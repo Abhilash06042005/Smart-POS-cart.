@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS System - Admin Panel</title>
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --primary-hover: #45a049;
+            --secondary-color: #2196F3;
+            --secondary-hover: #1976D2;
+            --danger-color: #f44336;
+            --danger-hover: #d32f2f;
+            --text-color: #333;
+            --bg-color: #f4f7f6;
+            --card-bg: #fff;
+            --border-color: #ddd;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .form-group input[readonly] {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            flex: 1;
+            min-width: 120px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-add {
+            background-color: var(--primary-color);
+        }
+
+        .btn-add:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-update {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-update:hover {
+            background-color: var(--secondary-hover);
+        }
+
+        .btn-delete {
+            background-color: var(--danger-color);
+        }
+
+        .btn-delete:hover {
+            background-color: var(--danger-hover);
+        }
+
+        .btn-clear {
+            background-color: #9e9e9e;
+        }
+
+        .btn-clear:hover {
+            background-color: #757575;
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 5px;
+        }
+
+        .action-btns button {
+            padding: 6px 12px;
+            font-size: 14px;
+            min-width: unset;
+            flex: none;
+        }
+
+        @media (max-width: 600px) {
+            .btn-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            table,
+            thead,
+            tbody,
+            th,
+            td,
+            tr {
+                display: block;
+            }
+
+            th {
+                display: none;
+            }
+
+            td {
+                padding-left: 50%;
+                position: relative;
+                text-align: right;
+            }
+
+            td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: bold;
+            }
+
+            .action-btns {
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>POS System - Admin Panel</h1>
+
+        <div class="card">
+            <h2>Manage Product</h2>
+            <form id="productForm">
+                <div class="form-group">
+                    <label for="barcode">Barcode</label>
+                    <input type="text" id="barcode" placeholder="e.g., 8901234567890" required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Product Name</label>
+                    <input type="text" id="name" placeholder="e.g., Apple" required>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price ($)</label>
+                    <input type="number" id="price" placeholder="e.g., 2.50" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="weight">Weight (grams)</label>
+                    <input type="number" id="weight" placeholder="e.g., 100" required>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn-add" id="btnAdd">Add Product</button>
+                    <button type="button" class="btn-update" id="btnUpdate">Update Product</button>
+                    <button type="button" class="btn-delete" id="btnDelete">Delete Product</button>
+                    <button type="button" class="btn-clear" id="btnClear">Clear Form</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Live Product List</h2>
+
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search products by barcode or name...">
+            </div>
+
+            <div style="overflow-x:auto;">
+                <table id="productTable">
+                    <thead>
+                        <tr>
+                            <th>Barcode</th>
+                            <th>Name</th>
+                            <th>Price ($)</th>
+                            <th>Weight (g)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+        import { getDatabase, ref, set, remove, onValue } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "YOUR_FIREBASE_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const barcodeInput = document.getElementById('barcode');
+        const nameInput = document.getElementById('name');
+        const priceInput = document.getElementById('price');
+        const weightInput = document.getElementById('weight');
+        const searchInput = document.getElementById('searchInput');
+        const tableBody = document.getElementById('productTableBody');
+
+        const btnAdd = document.getElementById('btnAdd');
+        const btnUpdate = document.getElementById('btnUpdate');
+        const btnDelete = document.getElementById('btnDelete');
+        const btnClear = document.getElementById('btnClear');
+
+        let productsData = {};
+
+        const clearForm = () => {
+            barcodeInput.value = '';
+            nameInput.value = '';
+            priceInput.value = '';
+            weightInput.value = '';
+            barcodeInput.readOnly = false;
+        };
+
+        const validateForm = () => {
+            const barcode = barcodeInput.value.trim();
+            const name = nameInput.value.trim();
+            const price = parseFloat(priceInput.value);
+            const weight = parseFloat(weightInput.value);
+
+            if (!barcode || !name || isNaN(price) || isNaN(weight)) {
+                alert('Please fill out all fields correctly.');
+                return null;
+            }
+
+            return { barcode, name, price, weight };
+        };
+
+        btnAdd.addEventListener('click', () => {
+            const data = validateForm();
+            if (data) {
+                const productRef = ref(db, 'products/' + data.barcode);
+                set(productRef, {
+                    name: data.name,
+                    price: data.price,
+                    weight: data.weight
+                }).then(() => {
+                    alert('Product added successfully!');
+                    clearForm();
+                }).catch((error) => {
+                    alert('Error adding product: ' + error.message);
+                });
+            }
+        });
+
+        btnUpdate.addEventListener('click', () => {
+            const data = validateForm();
+            if (data) {
+                const productRef = ref(db, 'products/' + data.barcode);
+                set(productRef, {
+                    name: data.name,
+                    price: data.price,
+                    weight: data.weight
+                }).then(() => {
+                    alert('Product updated successfully!');
+                    clearForm();
+                }).catch((error) => {
+                    alert('Error updating product: ' + error.message);
+                });
+            }
+        });
+
+        btnDelete.addEventListener('click', () => {
+            const barcode = barcodeInput.value.trim();
+            if (!barcode) {
+                alert('Please enter a Barcode to delete entirely.');
+                return;
+            }
+
+            if (confirm(`Are you sure you want to delete product with barcode: ${barcode}?`)) {
+                const productRef = ref(db, 'products/' + barcode);
+                remove(productRef).then(() => {
+                    alert('Product deleted successfully!');
+                    clearForm();
+                }).catch((error) => {
+                    alert('Error deleting product: ' + error.message);
+                });
+            }
+        });
+
+        btnClear.addEventListener('click', clearForm);
+
+        const productsRef = ref(db, 'products');
+        onValue(productsRef, (snapshot) => {
+            if (snapshot.exists()) {
+                productsData = snapshot.val();
+            } else {
+                productsData = {};
+            }
+            renderTable(searchInput.value);
+        }, (error) => {
+            console.error("Error fetching live database:", error);
+        });
+
+        const renderTable = (searchTerm = '') => {
+            tableBody.innerHTML = '';
+            const term = searchTerm.toLowerCase();
+
+            for (const [barcode, product] of Object.entries(productsData)) {
+                if (barcode.toLowerCase().includes(term) || product.name.toLowerCase().includes(term)) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                    <td data-label="Barcode">${barcode}</td>
+                    <td data-label="Name">${product.name}</td>
+                    <td data-label="Price ($)">${product.price}</td>
+                    <td data-label="Weight (g)">${product.weight}</td>
+                    <td data-label="Actions" class="action-btns">
+                        <button class="btn-update edit-btn" data-barcode="${barcode}">Edit</button>
+                        <button class="btn-delete del-btn" data-barcode="${barcode}">Delete</button>
+                    </td>
+                `;
+                    tableBody.appendChild(row);
+                }
+            }
+
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const bcode = e.target.getAttribute('data-barcode');
+                    const p = productsData[bcode];
+                    barcodeInput.value = bcode;
+                    nameInput.value = p.name;
+                    priceInput.value = p.price;
+                    weightInput.value = p.weight;
+                    barcodeInput.readOnly = true;
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+
+            document.querySelectorAll('.del-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const bcode = e.target.getAttribute('data-barcode');
+                    if (confirm(`Delete product ${bcode}?`)) {
+                        remove(ref(db, 'products/' + bcode)).catch(err => alert('Error: ' + err.message));
+                        if (barcodeInput.value === bcode) clearForm();
+                    }
+                });
+            });
+        };
+
+        searchInput.addEventListener('input', (e) => {
+            renderTable(e.target.value);
+        });
+    </script>
+</body>
+
+</html>

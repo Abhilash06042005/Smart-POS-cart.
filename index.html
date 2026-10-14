@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCart POS</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <link rel="stylesheet" href="pos.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <div class="logo-container">
+                <ion-icon name="cart" class="logo-icon"></ion-icon>
+            </div>
+            <h1>SmartCart POS</h1>
+        </div>
+
+        <div class="header-right">
+            <div class="status-badge success" id="scanner-status">
+                <ion-icon name="barcode-outline"></ion-icon>
+                <span>Scanner: Ready</span>
+            </div>
+
+            <div class="status-badge success" id="scale-status">
+                <ion-icon name="scale-outline"></ion-icon>
+                <span>Scale: Active</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <section class="left-panel">
+            <div class="input-section">
+                <ion-icon name="barcode-outline" class="input-icon"></ion-icon>
+                <input
+                    type="text"
+                    id="barcode-input"
+                    placeholder="Scan or type barcode and press Enter..."
+                    autocomplete="off"
+                >
+            </div>
+
+            <div class="cart-header">
+                <h2>Cart Items</h2>
+                <button class="btn-clear" id="btn-clear">
+                    <ion-icon name="trash-outline"></ion-icon>
+                    <span>Clear All</span>
+                </button>
+            </div>
+
+            <div class="cart-items" id="cart-items">
+                <div class="empty-cart-message">
+                    <ion-icon name="cart-outline"></ion-icon>
+                    <p>Your cart is empty.</p>
+                    <span class="empty-subtext">Scan a barcode to add items</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="right-panel">
+            <div class="summary-card">
+                <h2>Order Summary</h2>
+
+                <div class="summary-details">
+                    <div class="summary-row">
+                        <span class="label">Total Items</span>
+                        <span class="value" id="summary-items">0</span>
+                    </div>
+                </div>
+
+                <div class="weight-card">
+                    <div class="summary-row">
+                        <span class="label">Expected Weight</span>
+                        <span class="value" id="summary-expected-weight">0.00 kg</span>
+                    </div>
+
+                    <div class="summary-row">
+                        <span class="label">Actual Weight</span>
+                        <span class="value" id="summary-actual-weight">0.00 kg</span>
+                    </div>
+
+                    <div class="weight-status match" id="weight-status-indicator">
+                        <ion-icon name="checkmark-circle"></ion-icon>
+                        <span>Scale Ready</span>
+                    </div>
+                </div>
+
+                <div class="summary-total">
+                    <span>Total Price</span>
+                    <span class="total-price-value" id="summary-total-price">₹0.00</span>
+                </div>
+
+                <button class="btn-checkout checkout-disabled" id="btn-checkout" disabled>
+                    <ion-icon name="card-outline"></ion-icon>
+                    <span>Checkout</span>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <div class="payment-modal hidden" id="payment-modal">
+        <div class="payment-modal-content">
+            <h2>Scan to Pay</h2>
+            <p class="payment-amount" id="payment-amount">₹0.00</p>
+
+            <img src="dynamic_payment_qr.png" alt="UPI QR" class="payment-qr-image" id="dynamic-qr-image">
+
+            <p class="payment-wait-text">Waiting for payment verification...</p>
+
+            <div class="upi-link-box">
+                <a href="#" id="upi-pay-link" class="btn-upi-open">Open in UPI App</a>
+            </div>
+
+            <button class="btn-payment-cancel" id="btn-payment-cancel">
+                Cancel Payment
+            </button>
+        </div>
+    </div>
+
+    <div class="success-modal hidden" id="success-modal">
+        <div class="success-modal-content large-success">
+            <ion-icon name="checkmark-circle" class="success-icon"></ion-icon>
+            <h2>Payment Verification Completed</h2>
+            <p class="success-text">Thanks for shopping with Pi Team</p>
+
+            <div class="purchase-info" id="purchase-info"></div>
+
+            <div class="purchase-table-wrapper">
+                <table class="purchase-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Barcode</th>
+                            <th>Product Name</th>
+                            <th>Price</th>
+                            <th>Weight</th>
+                        </tr>
+                    </thead>
+                    <tbody id="purchase-table-body"></tbody>
+                </table>
+            </div>
+
+            <div class="purchase-total" id="purchase-total">Total: ₹0.00</div>
+
+            <div class="success-actions">
+                <a href="/api/download_bill" class="btn-download-bill" id="btn-download-bill">
+                    Download Bill
+                </a>
+                <button class="btn-success-close" id="btn-success-close">
+                    Done
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="pos.js"></script>
+</body>
+</html>
